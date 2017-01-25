@@ -11,12 +11,13 @@ RewriteCond %{REQUEST_URI} ^/yiipro/(admin)
 RewriteRule ^.*$ backend/web/index.php [L]
 
 
-RewriteCond %{REQUEST_URI} ^/yiipro/(assets|css|img)  
+RewriteCond %{REQUEST_URI} ^/yiipro/(assets|css|img|uploads)  
 RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]
 RewriteRule ^css/(.*)$ frontend/web/css/$1 [L]
 RewriteRule ^img/(.*)$ frontend/web/img/$1 [L]
+RewriteRule ^uploads/(.*)$ frontend/web/uploads/$1 [L]
 
-RewriteCond %{REQUEST_URI} !^/yiipro/(frontend|backend)/web/(assets|css|img)/  
+RewriteCond %{REQUEST_URI} !^/yiipro/(frontend|backend)/web/(assets|css|img|uploads)/  
 RewriteCond %{REQUEST_URI} !index.php
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
 RewriteCond %{REQUEST_FILENAME} !-d

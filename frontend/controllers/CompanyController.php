@@ -8,6 +8,7 @@ use app\models\CompanySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -65,7 +66,18 @@ class CompanyController extends Controller
     {
         $model = new Company();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
+            $file=$_FILES;
+           // echo '<pre>';print_r($file['Company']['name']['file']);exit();
+          //  echo $model->$file->extension;exit();
+            $ImageName =$file['Company']['name']['file'];
+            $model->file = UploadedFile::getInstance($model,'file');
+           // echo '<pre>';print_r($model->file);exit();
+            $model->file->saveAs( 'uploads/'.$ImageName );
+
+            $model->logo = 'uploads/'.$ImageName;
+            $model->save();
+
             return $this->redirect(['view', 'id' => $model->company_id]);
         } else {
             return $this->render('create', [
@@ -85,6 +97,13 @@ class CompanyController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            $ImageName = $model->company_name;
+            $model->file = UploadedFile::getInstance($model, 'file');
+            $model->file->saveAs( 'uploads/'.$ImageName.'.'.$model->$file->extension );
+
+           echo $model->logo = 'uploads/'.$ImageName.'.'.$model->$file->extension;
+die;
             return $this->redirect(['view', 'id' => $model->company_id]);
         } else {
             return $this->render('update', [

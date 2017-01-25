@@ -20,6 +20,7 @@ use Yii;
  */
 class Company extends \yii\db\ActiveRecord
 {
+    public $file;
     /**
      * @inheritdoc
      */
@@ -35,10 +36,12 @@ class Company extends \yii\db\ActiveRecord
     {
         return [
             [['company_name', 'company_email', 'company_address', 'company_profile', 'company_status'], 'required'],
-            [['company_created'], 'safe'],
+            [['company_created', 'logo'], 'safe'],
             [['company_status'], 'string'],
+            [['file'], 'file'],
+           // [['file'], 'file', 'extensions'=>'jpg, gif, png'],
             [['company_name', 'company_email'], 'string', 'max' => 100],
-            [['company_address'], 'string', 'max' => 255],
+            [['company_address', 'logo'], 'string', 'max' => 255],
             [['company_profile'], 'string', 'max' => 50],
         ];
     }
@@ -54,6 +57,7 @@ class Company extends \yii\db\ActiveRecord
             'company_email' => 'Company Email',
             'company_address' => 'Company Address',
             'company_profile' => 'Company Profile',
+            'file' => 'Logo',
             'company_created' => 'Company Created',
             'company_status' => 'Company Status',
         ];

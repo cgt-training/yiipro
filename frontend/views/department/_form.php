@@ -6,6 +6,7 @@ use yii\helpers\Arrayhelper;
 
 use app\models\Company;
 use app\models\Branch;
+use yiipro\widgets\DepDrop;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Department */
@@ -20,23 +21,22 @@ use app\models\Branch;
             Arrayhelper::map(Company::find()->all(), 'company_id','company_name'),
             [
                 'prompt'=>'Select Company',
-                // 'onchange'=>'$.post("index.php?r=branch/lists&id='.'"+$(this).val(), function( data ) {
-                //     $( "select#models-country" ).html(data);
-                // });'
                 'onchange'=>'
                 $.post( "'.Yii::$app->urlManager->createUrl('branch/lists?id=').'"+$(this).val(), function( data ) {
-                  $( "select#department-branch_fk_id" ).html( data );
-                });'
+                  $("select#department-branch_fk_id" ).html( data );remattr();
+                });',
             ]
         ) ?>
 
     
     <?= $form->field($model, 'branch_fk_id')->dropDownList(
-            Arrayhelper::map(Branch::find()->all(), 'branch_id','branch_name'),
+            Arrayhelper::map(['empty'=>'Empty string'], 'branch_id','branch_name'),
             [
                 'prompt'=>'Select Branch',
+                'disabled' => true,
             ]
         ) ?>
+
 
     <?= $form->field($model, 'department_name')->textInput(['maxlength' => true]) ?>
 
@@ -51,3 +51,13 @@ use app\models\Branch;
     <?php ActiveForm::end(); ?>
 
 </div>
+<script type="text/javascript">
+ function remattr(){
+       if((document.getElementById('department-company_fk_id').value)!=0)
+        {
+            document.getElementById('department-branch_fk_id').removeAttribute("disabled");
+                }else{
+        }
+    }
+
+</script>

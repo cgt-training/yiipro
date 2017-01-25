@@ -35,6 +35,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'company_profile',
             'company_created',
             'company_status',
+            [
+            'attribute'=>'logo',
+            'value'=>'@web/'.$model->logo,
+            'format' => ['image',['width'=>'100','height'=>'100']],
+],
+             
         ],
     ]) ?>
 
