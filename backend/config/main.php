@@ -13,9 +13,21 @@ return [
     'bootstrap' => ['log'],
     'modules' => [],
     'components' => [
-        'request' => [
-            'csrfParam' => '_csrf-backend',
+
+    // backend, under components array
+        'request'=>[
+            'class' => 'common\components\Request',
+            'web'=> '/backend/web',
+            'adminUrl' => '/admin'
         ],
+        'urlManager' => [
+                'enablePrettyUrl' => true,
+                'showScriptName' => false,
+        ],
+        /*'request' => [
+            'csrfParam' => '_csrf-backend',
+        ],*/
+
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -47,4 +59,5 @@ return [
         */
     ],
     'params' => $params,
+
 ];

@@ -6,15 +6,30 @@ $params = array_merge(
     require(__DIR__ . '/params-local.php')
 );
 
+
+
 return [
     'id' => 'app-frontend',
+    'name' => 'Test Application',
+
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
-        'request' => [
-            'csrfParam' => '_csrf-frontend',
+
+            //frontend, under components array
+        'request'=>[
+            'class' => 'common\components\Request',
+            'web'=> '/frontend/web'
         ],
+        'urlManager' => [
+                'enablePrettyUrl' => true,
+                'showScriptName' => false,
+        ],
+        /*'request' => [
+            'csrfParam' => '_csrf-frontend',
+        ],*/
+
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -46,4 +61,5 @@ return [
         */
     ],
     'params' => $params,
+
 ];

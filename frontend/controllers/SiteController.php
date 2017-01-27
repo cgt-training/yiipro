@@ -13,11 +13,32 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 
+use frontend\models\EntryForm;
+
+
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+
+    public function actionEntry()
+    {
+        $model = new EntryForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // valid data received in $model
+            //echo "<pre>";print_r(Yii::$app->request->post());
+            // do something meaningful here about $model ...
+            Yii::$app->session->setFlash('success', 'Thank you.');
+       
+            return $this->render('entry-confirm', ['model' => $model]);
+        } else {
+            // either the page is initially displayed or there is some validation error
+            return $this->render('entry', ['model' => $model]);
+        }
+    }
+
     /**
      * @inheritdoc
      */
@@ -26,10 +47,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['login', 'logout', 'signup'],
                 'rules' => [
                     [
-                        'actions' => ['signup'],
+                        'actions' => ['login', 'signup'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -88,7 +109,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+        //    return $this->goBack();
         } else {
             return $this->render('login', [
                 'model' => $model,
