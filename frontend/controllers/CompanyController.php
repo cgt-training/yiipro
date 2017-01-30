@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use yii\web\ForbiddenHttpException;
 
 /**
  * CompanyController implements the CRUD actions for Company model.
@@ -64,25 +65,29 @@ class CompanyController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Company();
+        if (Yii::$app->user->can( 'create-company' )) {
+           $model = new Company();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $file=$_FILES;
-           // echo '<pre>';print_r($file['Company']['name']['file']);exit();
-          //  echo $model->$file->extension;exit();
-            $ImageName =$file['Company']['name']['file'];
-            $model->file = UploadedFile::getInstance($model,'file');
-           // echo '<pre>';print_r($model->file);exit();
-            $model->file->saveAs( 'uploads/'.$ImageName );
+            if ($model->load(Yii::$app->request->post())) {
+                $file=$_FILES;
+               // echo '<pre>';print_r($file['Company']['name']['file']);exit();
+              //  echo $model->$file->extension;exit();
+                $ImageName =$file['Company']['name']['file'];
+                $model->file = UploadedFile::getInstance($model,'file');
+               // echo '<pre>';print_r($model->file);exit();
+                $model->file->saveAs( 'uploads/'.$ImageName );
 
-            $model->logo = 'uploads/'.$ImageName;
-            $model->save();
+                $model->logo = 'uploads/'.$ImageName;
+                $model->save();
 
-            return $this->redirect(['view', 'id' => $model->company_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+                return $this->redirect(['view', 'id' => $model->company_id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
+            throw new ForbiddenHttpException;
         }
     }
 
