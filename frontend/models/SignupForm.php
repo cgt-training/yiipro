@@ -55,19 +55,19 @@ class SignupForm extends Model
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->save();
-       // return $user->save(false) ? $user : null;
-       // echo '<pre>';echo $user->id;exit();
+       
         // //lets add the permission
-        $permissionLists =$_POST['SignupForm']['permissions'];
-        foreach ($permissionLists as $value) {
+        $role = $_POST['SignupForm']['permissions'];
+       // $permissionLists =$_POST['SignupForm']['permissions'];
+        //foreach ($permissionLists as $value) {
             $newPermission = new AuthAssignment;
             $auth = Yii::$app->authManager;
-            $admin = $auth->createRole('admin');
+            $admin = $auth->createRole($role);
             $newPermission->user_id = $user->id;
-            $newPermission->item_name = $value;
+            $newPermission->item_name = $role;
             $auth->assign($admin, $user->id);
             //$newPermission->save();
-        }
+        //}
         return $user;
     }
 }

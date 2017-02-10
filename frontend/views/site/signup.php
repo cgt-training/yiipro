@@ -25,8 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'email') ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
-                <?php $authItems = ArrayHelper::map($authItems, 'name', 'name'); ?>
-                <?= $form->field($model, 'permissions')->checkboxList($authItems); ?>
+
+                <?= $form->field($model, 'permissions')->dropDownList(ArrayHelper::map($authItems, 'name', 'name'),
+                [
+                    'prompt'=>'Select Role',
+                    // 'onchange'=>'
+                    // $.post( "'.Yii::$app->urlManager->createUrl('branch/lists?id=').'"+$(this).val(), function( data ) {
+                    //   $("select#department-branch_fk_id" ).html( data );remattr();
+                    // });',
+                ]
+            ) ?>
+
+                <?php //$authItems = ArrayHelper::map($authItems, 'name', 'name'); ?>
+                <?php //$form->field($model, 'permissions')->checkboxList($authItems); ?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>

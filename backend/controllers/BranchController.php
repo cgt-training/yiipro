@@ -8,6 +8,8 @@ use app\models\BranchSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
+//use yii\helpers\Html;
 
 /**
  * BranchController implements the CRUD actions for Branch model.
@@ -27,6 +29,10 @@ class BranchController extends Controller
                 ],
             ],
         ];
+    }
+    public function actions()
+    {   
+       // echo '<pre>';print_r( Yii::$app->errorHandler);die;
     }
 
     /**
@@ -62,15 +68,19 @@ class BranchController extends Controller
      * @return mixed
      */
     public function actionCreate()
-    {
-        $model = new Branch();
+    {  // echo Yii::$app->user->can( 'create-branch' );exit();
+        if (Yii::$app->user->can( 'create-branch' )) {
+            $model = new Branch();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->branch_id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->branch_id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
+           throw new ForbiddenHttpException("You don't have permission to access this page.");
         }
     }
 
@@ -82,14 +92,38 @@ class BranchController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can( 'edit-branch' )) {
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->branch_id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->branch_id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
+            throw new ForbiddenHttpException("You don't have permission to access this page.");
+        }
+    }
+
+    public function actionLists($id)
+    {
+        $countBranches = Branch::find()
+            ->where(['company_fk_id' => $id])
+            ->count();
+        // $countBranches=1;
+        $branches = Branch::find()
+            ->where(['company_fk_id' => $id])
+            ->all();
+
+        if($countBranches > 0)
+        {
+            foreach ($branches as $branch) {
+                echo "<option value='".$branch->branch_id."'>".$branch->branch_name."</option>";
+            }
+        }else{
+            echo "<option>---</option>";
         }
     }
 
@@ -101,9 +135,14 @@ class BranchController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (Yii::$app->user->can( 'delete-branch' )) {
 
-        return $this->redirect(['index']);
+            $this->findModel($id)->delete();
+
+            return $this->redirect(['index']);
+        }else{
+            throw new ForbiddenHttpException("You don't have permission to access this page.");
+        }
     }
 
     /**

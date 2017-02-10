@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
+//use yii\helpers\Html;
 
 /**
  * BranchController implements the CRUD actions for Branch model.
@@ -28,6 +29,10 @@ class BranchController extends Controller
                 ],
             ],
         ];
+    }
+    public function actions()
+    {   
+       // echo '<pre>';print_r( Yii::$app->errorHandler);die;
     }
 
     /**
@@ -75,8 +80,7 @@ class BranchController extends Controller
                 ]);
             }
         }else{
-            throw new ForbiddenHttpException;
-            
+           throw new ForbiddenHttpException("You don't have permission to access this page.");
         }
     }
 
@@ -88,14 +92,18 @@ class BranchController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can( 'edit-branch' )) {
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->branch_id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->branch_id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
+            throw new ForbiddenHttpException("You don't have permission to access this page.");
         }
     }
 
@@ -127,9 +135,14 @@ class BranchController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (Yii::$app->user->can( 'delete-branch' )) {
 
-        return $this->redirect(['index']);
+            $this->findModel($id)->delete();
+
+            return $this->redirect(['index']);
+        }else{
+            throw new ForbiddenHttpException("You don't have permission to access this page.");
+        }
     }
 
     /**

@@ -65,6 +65,7 @@ class CompanyController extends Controller
      */
     public function actionCreate()
     {
+        echo '<pre>';print_r(Yii::$app->user->identity);exit();
         if (Yii::$app->user->can( 'create-company' )) {
            $model = new Company();
 
@@ -87,7 +88,7 @@ class CompanyController extends Controller
                 ]);
             }
         }else{
-            throw new ForbiddenHttpException;
+            throw new ForbiddenHttpException("You don't have permission to access this page.");
         }
     }
 
@@ -99,21 +100,25 @@ class CompanyController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can( 'edit-company' )) {
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
-            $ImageName = $model->company_name;
-            $model->file = UploadedFile::getInstance($model, 'file');
-            $model->file->saveAs( 'uploads/'.$ImageName.'.'.$model->$file->extension );
+                $ImageName = $model->company_name;
+                $model->file = UploadedFile::getInstance($model, 'file');
+                $model->file->saveAs( 'uploads/'.$ImageName.'.'.$model->$file->extension );
 
-           echo $model->logo = 'uploads/'.$ImageName.'.'.$model->$file->extension;
-die;
-            return $this->redirect(['view', 'id' => $model->company_id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+               //echo $model->logo = 'uploads/'.$ImageName.'.'.$model->$file->extension;
+    //die;
+                return $this->redirect(['view', 'id' => $model->company_id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+         }else{
+            throw new ForbiddenHttpException("You don't have permission to access this page.");
         }
     }
 
@@ -125,9 +130,14 @@ die;
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (Yii::$app->user->can( 'delete-company' )) {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+         }else{
+            throw new ForbiddenHttpException("You don't have permission to access this page.");
+        }
+
     }
 
     /**

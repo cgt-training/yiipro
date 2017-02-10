@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="company-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
     <?= $form->field($model, 'company_name')->textInput(['maxlength' => true]) ?>
 
@@ -19,6 +19,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'company_address')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'company_profile')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'file')->fileInput() ?>
 
     <?= $form->field($model, 'company_created')->textInput() ?>
 

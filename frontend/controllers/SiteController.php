@@ -112,7 +112,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-        //    return $this->goBack();
+            return $this->goBack();
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -173,7 +173,13 @@ class SiteController extends Controller
     public function actionSignup()
     {
         $model = new SignupForm();
-        $authItems = AuthItem::find()->all();
+       // $authItems = AuthItem::find()->all()->where(['and','type' => '1']);
+        $authItems = (new \yii\db\Query())
+                ->select(['*'])
+                ->from('auth_item')
+                ->where(['type' => '1'])
+                ->all();
+                  
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 if (Yii::$app->getUser()->login($user)) {
