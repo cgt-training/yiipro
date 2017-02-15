@@ -174,11 +174,11 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
        // $authItems = AuthItem::find()->all()->where(['and','type' => '1']);
-        $authItems = (new \yii\db\Query())
-                ->select(['*'])
-                ->from('auth_item')
-                ->where(['type' => '1'])
-                ->all();
+        // $authItems = (new \yii\db\Query())
+        //         ->select(['*'])
+        //         ->from('auth_item')
+        //         ->where(['type' => '1'])
+        //         ->all();
                   
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
@@ -190,7 +190,7 @@ class SiteController extends Controller
 
         return $this->render('signup', [
             'model' => $model,
-            'authItems' => $authItems,
+         //   'authItems' => $authItems,
         ]);
     }
 

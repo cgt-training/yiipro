@@ -13,9 +13,9 @@ use yiipro\widgets\DepDrop;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="department-form">
+<div class="department-form box box-danger">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['class' => 'box-body']]); ?>
 
     <?= $form->field($model, 'company_fk_id')->dropDownList(
             Arrayhelper::map(Company::find()->all(), 'company_id','company_name'),
@@ -42,7 +42,7 @@ use yiipro\widgets\DepDrop;
 
     <?= $form->field($model, 'department_created')->textInput() ?>
 
-    <?= $form->field($model, 'department_status')->dropDownList([ 'active' => 'Active', 'deactive' => 'Deactive', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'department_status')->dropDownList([ 'active' => 'Active', 'deactive' => 'Deactive', ], ['prompt' => 'Select Status']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

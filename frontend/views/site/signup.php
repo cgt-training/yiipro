@@ -26,15 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
 
-                <?= $form->field($model, 'permissions')->dropDownList(ArrayHelper::map($authItems, 'name', 'name'),
-                [
-                    'prompt'=>'Select Role',
-                    // 'onchange'=>'
-                    // $.post( "'.Yii::$app->urlManager->createUrl('branch/lists?id=').'"+$(this).val(), function( data ) {
-                    //   $("select#department-branch_fk_id" ).html( data );remattr();
-                    // });',
-                ]
-            ) ?>
+                <?php //$form->field($model, 'permissions')->dropDownList(ArrayHelper::map($authItems, 'name', 'name'),
+              //  [
+               //     'prompt'=>'Select Role',
+               // ]
+           // ) ?>
 
                 <?php //$authItems = ArrayHelper::map($authItems, 'name', 'name'); ?>
                 <?php //$form->field($model, 'permissions')->checkboxList($authItems); ?>

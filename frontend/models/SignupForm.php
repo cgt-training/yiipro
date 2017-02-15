@@ -57,15 +57,15 @@ class SignupForm extends Model
         $user->save();
        
         // //lets add the permission
-        $role = $_POST['SignupForm']['permissions'];
+      //last  $role = $_POST['SignupForm']['permissions'];
        // $permissionLists =$_POST['SignupForm']['permissions'];
         //foreach ($permissionLists as $value) {
-            $newPermission = new AuthAssignment;
-            $auth = Yii::$app->authManager;
-            $admin = $auth->createRole($role);
-            $newPermission->user_id = $user->id;
-            $newPermission->item_name = $role;
-            $auth->assign($admin, $user->id);
+        //last    $newPermission = new AuthAssignment;
+        //last    $auth = Yii::$app->authManager;
+        //last    $admin = $auth->createRole($role);
+        //last    $newPermission->user_id = $user->id;
+        //last    $newPermission->item_name = $role;
+        //last    $auth->assign($admin, $user->id);
             //$newPermission->save();
         //}
         return $user;

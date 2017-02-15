@@ -11,9 +11,9 @@ use app\models\Company;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="branch-form">
+<div class="branch-form box box-primary">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['class' => 'box-body']]); ?>
 
     
     <?= $form->field($model, 'company_fk_id')->dropDownList(
@@ -25,7 +25,7 @@ use app\models\Company;
 
     <?= $form->field($model, 'branch_created')->textInput() ?>
 
-    <?= $form->field($model, 'branch_status')->dropDownList([ 'active' => 'Active', 'deactive' => 'Deactive', ], ['prompt' => '']) ?>
+    <?= $form->field($model, 'branch_status')->dropDownList([ 'active' => 'Active', 'deactive' => 'Deactive', ], ['prompt' => 'Select Status']) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

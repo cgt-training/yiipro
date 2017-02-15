@@ -30,11 +30,7 @@ class BranchController extends Controller
             ],
         ];
     }
-    public function actions()
-    {   
-       // echo '<pre>';print_r( Yii::$app->errorHandler);die;
-    }
-
+   
     /**
      * Lists all Branch models.
      * @return mixed
@@ -42,7 +38,7 @@ class BranchController extends Controller
     public function actionIndex()
     {
         $searchModel = new BranchSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->post());
 
         return $this->render('index', [
             'searchModel' => $searchModel,

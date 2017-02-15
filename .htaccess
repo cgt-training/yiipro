@@ -7,12 +7,13 @@ RewriteRule ^admin/assets/(.*)$ backend/web/assets/$1 [L]
 RewriteRule ^admin/css/(.*)$ backend/web/css/$1 [L]
 RewriteRule ^admin/js/(.*)$ backend/web/js/$1 [L]
 RewriteRule ^admin/dist/(.*)$ backend/web/dist/$1 [L]
+RewriteRule ^admin/fonts/(.*)$ backend/web/fonts/$1 [L]
+RewriteRule ^admin/uploads/(.*)$ backend/web/uploads/$1 [L]
 RewriteRule ^admin/plugins/(.*)$ backend/web/plugins/$1 [L]
 
-RewriteCond %{REQUEST_URI} !^/yiipro/backend/web/(assets|css|js|dist|plugins)/  
+RewriteCond %{REQUEST_URI} !^/yiipro/backend/web/(assets|css|js|dist|fonts|plugins)/  
 RewriteCond %{REQUEST_URI} ^/yiipro/(admin)  
 RewriteRule ^.*$ backend/web/index.php [L]
-
 
 RewriteCond %{REQUEST_URI} ^/yiipro/(assets|css|img|uploads)  
 RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]
@@ -20,7 +21,7 @@ RewriteRule ^css/(.*)$ frontend/web/css/$1 [L]
 RewriteRule ^img/(.*)$ frontend/web/img/$1 [L]
 RewriteRule ^uploads/(.*)$ frontend/web/uploads/$1 [L]
 
-RewriteCond %{REQUEST_URI} !^/yiipro/(frontend|backend)/web/(assets|css|img|dist|plugins|js|uploads)/  
+RewriteCond %{REQUEST_URI} !^/yiipro/(frontend|backend)/web/(assets|css|img|dist|plugins|fonts|js|uploads)/  
 RewriteCond %{REQUEST_URI} !index.php
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
 RewriteCond %{REQUEST_FILENAME} !-d

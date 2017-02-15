@@ -10,10 +10,8 @@ $this->title = $model->company_id;
 $this->params['breadcrumbs'][] = ['label' => 'Companies', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="company-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
+<div class="company-view box">
+    <div class="box-body">
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->company_id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->company_id], [
@@ -43,5 +41,5 @@ $this->params['breadcrumbs'][] = $this->title;
              
         ],
     ]) ?>
-
+</div>
 </div>

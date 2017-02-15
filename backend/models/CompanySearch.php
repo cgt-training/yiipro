@@ -15,11 +15,13 @@ class CompanySearch extends Company
     /**
      * @inheritdoc
      */
+    public $searchstring;
     public function rules()
     {
         return [
             [['company_id'], 'integer'],
             [['company_name', 'company_email', 'company_address', 'company_profile', 'company_created', 'company_status'], 'safe'],
+            [['searchstring'], 'safe'],
         ];
     }
 
@@ -30,6 +32,11 @@ class CompanySearch extends Company
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
+    }
+
+    public function count(){
+        $count = (new \yii\db\Query())->from('company')->count();
+        return $count;
     }
 
     /**
@@ -58,16 +65,18 @@ class CompanySearch extends Company
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'company_id' => $this->company_id,
-            'company_created' => $this->company_created,
-        ]);
+        // $query->andFilterWhere([
+        //     'company_id' => $this->company_id,
+        //     'company_created' => $this->company_created,
+        // ]);
 
-        $query->andFilterWhere(['like', 'company_name', $this->company_name])
-            ->andFilterWhere(['like', 'company_email', $this->company_email])
-            ->andFilterWhere(['like', 'company_address', $this->company_address])
-            ->andFilterWhere(['like', 'company_profile', $this->company_profile])
-            ->andFilterWhere(['like', 'company_status', $this->company_status]);
+        $query->orFilterWhere(['like', 'company_name', $this->searchstring])
+            ->orFilterWhere(['like', 'company_email', $this->searchstring])
+            ->orFilterWhere(['like', 'company_address', $this->searchstring])
+            ->orFilterWhere(['like', 'company_profile', $this->searchstring])
+            ->orFilterWhere(['like', 'company_status', $this->searchstring])
+            ->orFilterWhere(['like', 'company_id', $this->searchstring])
+            ->orFilterWhere(['like', 'company_created', $this->searchstring]);
 
         return $dataProvider;
     }

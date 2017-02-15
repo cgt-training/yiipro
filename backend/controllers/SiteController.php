@@ -2,6 +2,14 @@
 namespace backend\controllers;
 
 use Yii;
+use app\models\Branch;
+use app\models\BranchSearch;
+use app\models\Company;
+use app\models\CompanySearch;
+use app\models\Department;
+use app\models\DepartmentSearch;
+use backend\models\User;
+use backend\models\UserSearch;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -60,7 +68,23 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+       // return $this->render('index');
+
+        $branchModel = new BranchSearch();
+        $brachCount = $branchModel->count();
+        $companyModel = new CompanySearch();
+        $companyCount = $companyModel->count();
+        $departmentModel = new DepartmentSearch();
+        $departmentCount = $departmentModel->count();
+        $userModel = new UserSearch();
+        $userCount = $userModel->count();
+
+        return $this->render('index', [
+          'brachCount' => $brachCount,
+          'companyCount' => $companyCount,
+          'departmentCount' => $departmentCount,
+          'userCount' => $userCount,
+        ]);
     }
 
     /**

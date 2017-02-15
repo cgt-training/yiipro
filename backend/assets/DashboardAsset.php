@@ -22,7 +22,7 @@ class DashboardAsset extends AssetBundle
         'css/site.css',
     ];
     public $js = [
-        'plugins/jQuery/jquery-2.2.3.min.js',
+       // 'plugins/jQuery/jquery-2.2.3.min.js',
         'js/bootstrap.min.js',
         'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js',
         'https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js',
@@ -37,7 +37,7 @@ class DashboardAsset extends AssetBundle
         'plugins/slimScroll/jquery.slimscroll.min.js',
         'plugins/fastclick/fastclick.js',
         'js/app.min.js',
-        'js/dashboard.js',
+       // 'js/dashboard.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

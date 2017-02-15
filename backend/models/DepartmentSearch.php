@@ -15,11 +15,13 @@ class DepartmentSearch extends Department
     /**
      * @inheritdoc
      */
+    public $searchstring;
     public function rules()
     {
         return [
             [['department_id', 'company_fk_id', 'branch_fk_id'], 'integer'],
             [['department_name', 'department_created', 'department_status'], 'safe'],
+            [['searchstring'], 'safe'],
         ];
     }
 
@@ -30,6 +32,11 @@ class DepartmentSearch extends Department
     {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
+    }
+
+    public function count(){
+        $count = (new \yii\db\Query())->from('department')->count();
+        return $count;
     }
 
     /**
@@ -58,15 +65,22 @@ class DepartmentSearch extends Department
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'department_id' => $this->department_id,
-            'company_fk_id' => $this->company_fk_id,
-            'branch_fk_id' => $this->branch_fk_id,
-            'department_created' => $this->department_created,
-        ]);
+        // $query->andFilterWhere([
+        //     'department_id' => $this->department_id,
+        //     'company_fk_id' => $this->company_fk_id,
+        //     'branch_fk_id' => $this->branch_fk_id,
+        //     'department_created' => $this->department_created,
+        // ]);
 
-        $query->andFilterWhere(['like', 'department_name', $this->department_name])
-            ->andFilterWhere(['like', 'department_status', $this->department_status]);
+        // $query->andFilterWhere(['like', 'department_name', $this->department_name])
+        //     ->andFilterWhere(['like', 'department_status', $this->department_status]);
+
+        $query->orFilterWhere(['like', 'department_id', $this->searchstring])
+            ->orFilterWhere(['like', 'company_fk_id', $this->searchstring])
+            ->orFilterWhere(['like', 'branch_fk_id', $this->searchstring])
+            ->orFilterWhere(['like', 'department_created', $this->searchstring])
+            ->orFilterWhere(['like', 'department_name', $this->searchstring])
+            ->orFilterWhere(['like', 'department_status', $this->searchstring]);
 
         return $dataProvider;
     }
