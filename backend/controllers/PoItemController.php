@@ -29,6 +29,14 @@ class PoItemController extends Controller
         ];
     }
 
+    public function init()
+    {
+       if(!Yii::$app->user->identity)
+        {
+            $this->redirect(array('/site/login'));
+        }
+    }
+    
     /**
      * Lists all PoItem models.
      * @return mixed

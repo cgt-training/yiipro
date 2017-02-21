@@ -30,6 +30,14 @@ class DepartmentController extends Controller
         ];
     }
 
+    public function init()
+    {
+        if(!Yii::$app->user->identity)
+        {
+            $this->redirect(array('/site/login'));
+        }
+    }
+
     /**
      * Lists all Department models.
      * @return mixed
@@ -75,7 +83,8 @@ class DepartmentController extends Controller
                 ]);
             }
         }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+            //throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
 
     }
@@ -99,7 +108,8 @@ class DepartmentController extends Controller
                 ]);
             }
         }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+           // throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
 
     }
@@ -117,7 +127,8 @@ class DepartmentController extends Controller
 
             return $this->redirect(['index']);
         }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+           // throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 

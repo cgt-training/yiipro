@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '<div class="input-group">{input}<span class="input-group-btn">' .
                 Html::submitButton('Click for Search', ['class' => 'btn btn-danger']) .
                 '</span></div>',
-            ])->textInput(['placeholder' => 'type text for search....']);
+            ])->textInput(['placeholder' => 'type text for search....', 'onkeydown'=>"$('#search').submit();"]);
 
         ActiveForm::end(); ?>
 
@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'company_fk_id',
                     'branch_fk_id',
                     'department_name',
-                    'department_created',
+                    'department_created:date',
                     // 'department_status',
 
                     ['class' => 'yii\grid\ActionColumn'],

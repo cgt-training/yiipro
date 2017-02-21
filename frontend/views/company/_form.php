@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'company_profile')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'file')->fileInput() ?>
+    <?= $form->field($model, 'logo')->fileInput(['class' => 'form-control']) ?>
 
     <?= $form->field($model, 'company_created')->textInput() ?>
 

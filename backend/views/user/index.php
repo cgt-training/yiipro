@@ -13,16 +13,18 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index box">
         <div class="box-body">
-            <?php $form = ActiveForm::begin(['id' => 'search' ,'options' => ['class' => 'box-body']]);
+           <?php $form = ActiveForm::begin(['id' => 'search' ,'options' => ['class' => 'box-body']]);
 
                echo $form->field($searchModel, 'searchstring', [
                 'template' => '<div class="input-group">{input}<span class="input-group-btn">' .
                 Html::submitButton('Click for Search', ['class' => 'btn btn-danger']) .
                 '</span></div>',
-            ])->textInput(['placeholder' => 'type text for search....']);
+            ])->textInput(['placeholder' => 'type text for search....', 'onkeydown'=>"$('#search').submit();"]);
 
-        ActiveForm::end(); ?>
+              // echo $form->field($searchModel, 'searchstring')->textInput(['onkeydown'=>"$('#search').submit();"]);
 
+     ActiveForm::end(); ?>
+     
         <div id="main-div">
              <?php Pjax::begin(); ?>    <?= GridView::widget([
                     'dataProvider' => $dataProvider,
@@ -33,10 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         'id',
                         'role',
                         'username',
-                        'auth_key',
-                        'password_hash',
+                        // 'auth_key',
+                        // 'password_hash',
                         // 'password_reset_token',
-                        // 'email:email',
+                        'email:email',
                         // 'status',
                         // 'created_at',
                         // 'updated_at',
@@ -48,7 +50,6 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 </div>
-
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
 <script type="text/javascript">
@@ -77,5 +78,6 @@ jQuery.noConflict();
             });
             return false;
          });
+        
     });
 </script>

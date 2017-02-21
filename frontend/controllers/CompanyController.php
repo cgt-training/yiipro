@@ -96,13 +96,19 @@ class CompanyController extends Controller
     {
         if (Yii::$app->user->can( 'edit-company' )) {
             $model = $this->findModel($id);
-
+            $old_img = $model->logo;
             if ($model->load(Yii::$app->request->post()) ) {
                 $file=$_FILES;
-                $ImageName =$file['Company']['name']['file'];
-                $model->file = UploadedFile::getInstance($model, 'file');
-                $model->file->saveAs( 'uploads/'.$ImageName );
-                $model->logo = 'uploads/'.$ImageName;
+                $ImageName =$file['Company']['name']['logo'];
+                if(!empty($ImageName)){
+                    $model->file = UploadedFile::getInstance($model, 'logo');
+                    $model->file->saveAs( 'uploads/'.$ImageName );
+                    $model->logo = 'uploads/'.$ImageName;
+                    unlink( $old_img );
+                }else{
+                    $model->file = UploadedFile::getInstance($model, 'logo');
+                    $model->logo = $old_img;
+                }
                 $model->save();
                 return $this->redirect(['view', 'id' => $model->company_id]);
             } else {

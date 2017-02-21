@@ -92,9 +92,10 @@ class BranchController extends Controller
      */
     public function actionUpdate($id)
     {
-        if (Yii::$app->user->can( 'edit-branch' )) {
-            $model = $this->findModel($id);
+        $model = $this->findModel($id);
 
+        if (Yii::$app->user->can( 'edit-branch' )) {
+            
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->branch_id]);
             } else {
@@ -103,7 +104,11 @@ class BranchController extends Controller
                 ]);
             }
         }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+            //throw new ForbiddenHttpException("You don't have permission to access this page.");
+            Yii::$app->session->setFlash('error', "You don't have permission to access this page.Please contact to administrator");
+            return $this->render('view', [
+                    'model' => $model,
+                ]);
         }
     }
 
@@ -135,13 +140,18 @@ class BranchController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         if (Yii::$app->user->can( 'delete-branch' )) {
 
             $this->findModel($id)->delete();
 
             return $this->redirect(['index']);
         }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+            //throw new ForbiddenHttpException("You don't have permission to access this page.");
+             Yii::$app->session->setFlash('error', "You don't have permission to access this page.Please contact to administrator");
+            return $this->render('view', [
+                    'model' => $model,
+                ]);
         }
     }
 

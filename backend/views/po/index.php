@@ -13,15 +13,17 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="po-index box">
     <div class="box-body">
-     <?php $form = ActiveForm::begin(['id' => 'search' ,'options' => ['class' => 'box-body']]);
+    <?php $form = ActiveForm::begin(['id' => 'search' ,'options' => ['class' => 'box-body']]);
 
-           echo $form->field($searchModel, 'searchstring', [
-            'template' => '<div class="input-group">{input}<span class="input-group-btn">' .
-            Html::submitButton('Click for Search', ['class' => 'btn btn-danger']) .
-            '</span></div>',
-        ])->textInput(['placeholder' => 'type text for search....']);
+               echo $form->field($searchModel, 'searchstring', [
+                'template' => '<div class="input-group">{input}<span class="input-group-btn">' .
+                Html::submitButton('Click for Search', ['class' => 'btn btn-danger']) .
+                '</span></div>',
+            ])->textInput(['placeholder' => 'type text for search....', 'onkeydown'=>"$('#search').submit();"]);
 
-        ActiveForm::end(); ?>
+              // echo $form->field($searchModel, 'searchstring')->textInput(['onkeydown'=>"$('#search').submit();"]);
+
+     ActiveForm::end(); ?>
 
         <div id="main-div">
              <?php Pjax::begin(); ?>    <?= GridView::widget([

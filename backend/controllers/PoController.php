@@ -14,6 +14,7 @@ use backend\models\Model;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
+use yii\web\ForbiddenHttpException;
 
 /**
  * PoController implements the CRUD actions for Po model.
@@ -33,6 +34,14 @@ class PoController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function init()
+    {
+        if(!Yii::$app->user->identity)
+        {
+            $this->redirect(array('/site/login'));
+        }
     }
 
     /**
@@ -68,47 +77,52 @@ class PoController extends Controller
      * @return mixed
      */
     public function actionCreate()
-    {
-        $model = new Po();
-        $modelsPoitem = [new PoItem];
-      
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $modelsPoitem = Model::createMultiple(PoItem::classname());
-            Model::loadMultiple($modelsPoitem, Yii::$app->request->post());
+    {   
+        if (Yii::$app->user->can( 'create-po' )) {
+            $model = new Po();
+            $modelsPoitem = [new PoItem];
+          
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                $modelsPoitem = Model::createMultiple(PoItem::classname());
+                Model::loadMultiple($modelsPoitem, Yii::$app->request->post());
 
-            // validate all models
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsPoitem) && $valid;
+                // validate all models
+                $valid = $model->validate();
+                $valid = Model::validateMultiple($modelsPoitem) && $valid;
 
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                    if ($flag = $model->save(false)) {
-                        foreach ($modelsPoitem as $modelPoitem) 
-                        {
-                             $modelPoitem->po_id = $model->id;
+                if ($valid) {
+                    $transaction = \Yii::$app->db->beginTransaction();
+                    try {
+                        if ($flag = $model->save(false)) {
+                            foreach ($modelsPoitem as $modelPoitem) 
+                            {
+                                 $modelPoitem->po_id = $model->id;
 
-                            if (! ($flag = $modelPoitem->save(false))) {
-                                $transaction->rollBack();
-                                break;
+                                if (! ($flag = $modelPoitem->save(false))) {
+                                    $transaction->rollBack();
+                                    break;
+                                }
                             }
                         }
+                        if ($flag) {
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }
+                    } catch (Exception $e) {
+                        $transaction->rollBack();
                     }
-                    if ($flag) {
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollBack();
                 }
-            }
 
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-                'modelsPoitem' => (empty($modelsPoitem)) ? [new PoItem] : $modelsPoitem,
-            ]);
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                    'modelsPoitem' => (empty($modelsPoitem)) ? [new PoItem] : $modelsPoitem,
+                ]);
+            }
+        }else{
+          // throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 
@@ -120,49 +134,53 @@ class PoController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-        $modelsPoitem = [new PoItem];
+        if (Yii::$app->user->can( 'edit-po' )) {
+            $model = $this->findModel($id);
+            $modelsPoitem = [new PoItem];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-             $modelsPoitem = Model::createMultiple(PoItem::classname());
-            Model::loadMultiple($modelsPoitem, Yii::$app->request->post());
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                 $modelsPoitem = Model::createMultiple(PoItem::classname());
+                Model::loadMultiple($modelsPoitem, Yii::$app->request->post());
 
-            // validate all models
-            $valid = $model->validate();
-            $valid = Model::validateMultiple($modelsPoitem) && $valid;
+                // validate all models
+                $valid = $model->validate();
+                $valid = Model::validateMultiple($modelsPoitem) && $valid;
 
-            if ($valid) {
-                $transaction = \Yii::$app->db->beginTransaction();
-                try {
-                    if ($flag = $model->save(false)) {
-                        foreach ($modelsPoitem as $modelPoitem) 
-                        {
-                             $modelPoitem->po_id = $model->id;
+                if ($valid) {
+                    $transaction = \Yii::$app->db->beginTransaction();
+                    try {
+                        if ($flag = $model->save(false)) {
+                            foreach ($modelsPoitem as $modelPoitem) 
+                            {
+                                 $modelPoitem->po_id = $model->id;
 
-                            if (! ($flag = $modelPoitem->save(false))) {
-                                $transaction->rollBack();
-                                break;
+                                if (! ($flag = $modelPoitem->save(false))) {
+                                    $transaction->rollBack();
+                                    break;
+                                }
                             }
                         }
+                        if ($flag) {
+                            $transaction->commit();
+                            return $this->redirect(['view', 'id' => $model->id]);
+                        }
+                    } catch (Exception $e) {
+                        $transaction->rollBack();
                     }
-                    if ($flag) {
-                        $transaction->commit();
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollBack();
                 }
-            }
 
-            return $this->redirect(['view', 'id' => $model->id]);
-           // return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-                  'modelsPoitem' => (empty($modelsPoitem)) ? [new PoItem] : $modelsPoitem,
-            ]);
-        }
-         
+                return $this->redirect(['view', 'id' => $model->id]);
+               // return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                      'modelsPoitem' => (empty($modelsPoitem)) ? [new PoItem] : $modelsPoitem,
+                ]);
+            }
+        }else{
+          // throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
+        }  
     }
 
     /**
@@ -173,9 +191,15 @@ class PoController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (Yii::$app->user->can( 'delete-po' )) {
 
-        return $this->redirect(['index']);
+            $this->findModel($id)->delete();
+
+            return $this->redirect(['index']);
+         }else{
+           //throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
+        } 
     }
 
     /**

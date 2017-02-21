@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="inner">
               <h3><?php echo $companyCount;?></h3>
 
-              <p>Total Country</p>
+              <p>Total Company</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
@@ -80,6 +80,3 @@ $this->params['breadcrumbs'][] = $this->title;
       
 
     </section>
-    <!-- /.content -->
- 
-</div>

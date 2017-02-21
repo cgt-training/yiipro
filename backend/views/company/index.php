@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '<div class="input-group">{input}<span class="input-group-btn">' .
                 Html::submitButton('Click for Search', ['class' => 'btn btn-danger']) .
                 '</span></div>',
-            ])->textInput(['placeholder' => 'type text for search....']);
+            ])->textInput(['placeholder' => 'type text for search....', 'onkeydown'=>"$('#search').submit();"]);
 
      ActiveForm::end(); ?>
         <div id="main-div">

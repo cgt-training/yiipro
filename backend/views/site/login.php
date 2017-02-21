@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'template' => '{input}<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                         {error}{hint}'
-                ])->textInput(['placeholder' => 'Username' ,'autofocus' => true]) ?>
+                ])->textInput(['placeholder' => 'Username' ,'autofocus' => true , 'autocomplete' => 'off']) ?>
 
                 <?= $form->field($model, 'password',['options'=>[
                         'tag' => 'div',

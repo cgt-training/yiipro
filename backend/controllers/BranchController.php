@@ -31,6 +31,14 @@ class BranchController extends Controller
         ];
     }
    
+   public function init()
+    {
+         if(!Yii::$app->user->identity)
+        {
+            $this->redirect(array('/site/login'));
+        }
+    }
+
     /**
      * Lists all Branch models.
      * @return mixed
@@ -76,7 +84,8 @@ class BranchController extends Controller
                 ]);
             }
         }else{
-           throw new ForbiddenHttpException("You don't have permission to access this page.");
+         //  throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 
@@ -99,7 +108,8 @@ class BranchController extends Controller
                 ]);
             }
         }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+           // throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 
@@ -131,13 +141,14 @@ class BranchController extends Controller
      */
     public function actionDelete($id)
     {
+        $model = $this->findModel($id);
         if (Yii::$app->user->can( 'delete-branch' )) {
 
             $this->findModel($id)->delete();
 
             return $this->redirect(['index']);
         }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 

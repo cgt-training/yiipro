@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\AuthAssignment;
 use yii\rbac\Role;
-
+use yii\web\ForbiddenHttpException;
 /**
  * UserController implements the CRUD actions for User model.
  */
@@ -29,6 +29,14 @@ class UserController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function init()
+    {
+       if(!Yii::$app->user->identity)
+        {
+            $this->redirect(array('/site/login'));
+        }
     }
 
     /**
@@ -65,14 +73,19 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $model = new User();
+        if (Yii::$app->user->can( 'create-user' )) {
+            $model = new User();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+        }else{
+          // throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 
@@ -84,41 +97,46 @@ class UserController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if (Yii::$app->user->can( 'edit-user' )) {
+            $model = $this->findModel($id);
 
-        $auth = Yii::$app->authManager;
-  
-        $items = $model['role'];
-       // echo $items;die;
-        $item = $auth->getRole($items);
-        
-        if ($model->load(Yii::$app->request->post())) {
-
-            $role = Yii::$app->request->post('User')['role'];
+            $auth = Yii::$app->authManager;
+      
+            $items = $model['role'];
+           // echo $items;die;
+            $item = $auth->getRole($items);
             
-            if($items=='Guest'){
+            if ($model->load(Yii::$app->request->post())) {
+
+                $role = Yii::$app->request->post('User')['role'];
                 
-                $role2 = $auth->getRole($role);
+                if($items=='Guest'){
+                    
+                    $role2 = $auth->getRole($role);
 
-                $auth->assign($role2, $id);
+                    $auth->assign($role2, $id);
 
-            }else{
+                }else{
 
-                $auth->revoke($item, $id);
-             
-                $role2 = $auth->getRole($role);
+                    $auth->revoke($item, $id);
+                 
+                    $role2 = $auth->getRole($role);
 
-                $auth->assign($role2, $id);
+                    $auth->assign($role2, $id);
+                }
+
+                $model->save();
+
+                return $this->redirect(['view', 'id' => $model->id]);
+
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
             }
-
-            $model->save();
-
-            return $this->redirect(['view', 'id' => $model->id]);
-
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        }else{
+         //  throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 
@@ -130,9 +148,14 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if (Yii::$app->user->can( 'delete-user' )) {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }else{
+           //throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
+        }
     }
 
     /**

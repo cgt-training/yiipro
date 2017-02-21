@@ -55,8 +55,8 @@ DashboardAsset::register($this);
                 <!-- <img src="dist/img/kanh.jpg" class="img-circle" alt="User Image"> -->
                 <?= Html::img('@web/dist/img/kanh.jpg',['class'=>'img-circle']);?>
                 <p>
-                  <?php echo Yii::$app->user->identity->username;?>
-                  <small>Member since <?php echo Yii::$app->formatter->asDate(Yii::$app->user->identity->created_at, 'dd-MM-YYYY');?></small>
+                  <?php if(isset(Yii::$app->user->identity->username)){echo Yii::$app->user->identity->username;}?>
+                 <?php if(isset(Yii::$app->user->identity->created_at)){?> <small>Member since <?php echo Yii::$app->formatter->asDate(Yii::$app->user->identity->created_at, 'dd-MM-YYYY');?></small><?php }?>
                 </p>
               </li>
               
@@ -101,7 +101,7 @@ DashboardAsset::register($this);
           <!-- <img src="dist/img/kanh.jpg" class="img-circle" alt="User Image"> -->
         </div>
         <div class="pull-left info">
-          <p><?php echo Yii::$app->user->identity->username;?></p>
+          <p><?php if(isset(Yii::$app->user->identity->username)){ echo Yii::$app->user->identity->username;}?></p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>

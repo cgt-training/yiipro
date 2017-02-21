@@ -22,7 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '<div class="input-group">{input}<span class="input-group-btn">' .
                 Html::submitButton('Click for Search', ['class' => 'btn btn-danger']) .
                 '</span></div>',
-            ])->textInput(['placeholder' => 'type text for search....']);
+            ])->textInput(['placeholder' => 'type text for search....', 'onkeydown'=>"$('#search').submit();"]);
+
+              // echo $form->field($searchModel, 'searchstring')->textInput(['onkeydown'=>"$('#search').submit();"]);
 
      ActiveForm::end(); ?>
 
@@ -42,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
 
                         'branch_name',
-                        'branch_created',
+                        'branch_created:date',
                         'branch_status',
                        ['class' => 'yii\grid\ActionColumn'],
                         ],
@@ -80,5 +82,6 @@ jQuery.noConflict();
             });
             return false;
          });
+        
     });
 </script>

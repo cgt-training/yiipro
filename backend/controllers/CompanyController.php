@@ -31,6 +31,14 @@ class CompanyController extends Controller
         ];
     }
 
+    public function init()
+    {
+       if(!Yii::$app->user->identity)
+        {
+            $this->redirect(array('/site/login'));
+        }
+    }
+
     /**
      * Lists all Company models.
      * @return mixed
@@ -72,8 +80,8 @@ class CompanyController extends Controller
 
             if ($model->load(Yii::$app->request->post())) {
                 $file=$_FILES;
-                $ImageName =$file['Company']['name']['file'];
-                $model->file = UploadedFile::getInstance($model,'file');
+                $ImageName =$file['Company']['name']['logo'];
+                $model->file = UploadedFile::getInstance($model,'logo');
                 $model->file->saveAs( 'uploads/'.$ImageName );
                 $model->logo = 'uploads/'.$ImageName;
                 $model->save();
@@ -84,7 +92,8 @@ class CompanyController extends Controller
                 ]);
             }
         }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+           // throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 
@@ -98,13 +107,19 @@ class CompanyController extends Controller
     {
         if (Yii::$app->user->can( 'edit-company' )) {
             $model = $this->findModel($id);
-
+            $old_img = $model->logo;
             if ($model->load(Yii::$app->request->post()) ) {
                 $file=$_FILES;
-                $ImageName =$file['Company']['name']['file'];
-                $model->file = UploadedFile::getInstance($model, 'file');
-                $model->file->saveAs( 'uploads/'.$ImageName );
-                $model->logo = 'uploads/'.$ImageName;
+                $ImageName =$file['Company']['name']['logo'];
+                if(!empty($ImageName)){
+                    $model->file = UploadedFile::getInstance($model, 'logo');
+                    $model->file->saveAs( 'uploads/'.$ImageName );
+                    $model->logo = 'uploads/'.$ImageName;
+                    unlink( $old_img );
+                }else{
+                    $model->file = UploadedFile::getInstance($model, 'logo');
+                    $model->logo = $old_img;
+                }
                 $model->save();
                 return $this->redirect(['view', 'id' => $model->company_id]);
             } else {
@@ -113,7 +128,8 @@ class CompanyController extends Controller
                 ]);
             }
          }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+           // throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
     }
 
@@ -130,7 +146,8 @@ class CompanyController extends Controller
 
             return $this->redirect(['index']);
          }else{
-            throw new ForbiddenHttpException("You don't have permission to access this page.");
+           //throw new ForbiddenHttpException("You don't have permission to access this page.");
+            return $this->render('/site/site', []);
         }
 
     }

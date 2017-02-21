@@ -3,9 +3,9 @@
 use yii\helpers\Html;
 use yii\helpers\Arrayhelper;
 use yii\widgets\ActiveForm;
-
+use yii\jui\DatePicker;
 use app\models\Company;
-
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model app\models\Branch */
 /* @var $form yii\widgets\ActiveForm */
@@ -15,20 +15,28 @@ use app\models\Company;
 
     <?php $form = ActiveForm::begin(['options' => ['class' => 'box-body']]); ?>
 
-    
-    <?= $form->field($model, 'company_fk_id')->dropDownList(
+    <div class="col-sm-6">
+         <?= $form->field($model, 'company_fk_id')->dropDownList(
     		Arrayhelper::map(Company::find()->all(), 'company_id','company_name'),
-    		['prompt'=>'Select Company']
-    	) ?>
+    		['prompt'=>'Select Company']) ?>
+    </div>
 
-    <?= $form->field($model, 'branch_name')->textInput(['maxlength' => true]) ?>
+    <div class="col-sm-6">
+        <?= $form->field($model, 'branch_name')->textInput(['maxlength' => true]) ?>
+    </div>
+  
+    <div class="col-sm-6">
+        <?= $form->field($model,'branch_created')->widget(DatePicker::className(),['dateFormat' => 'yyyy-MM-dd', 'options' => [
+                'class' => 'form-control','readonly' => 'readonly']]) ?>
+    </div>
+ 
+    <div class="col-sm-6">
+        <?= $form->field($model, 'branch_status')->dropDownList([ 'active' => 'Active', 'deactive' => 'Deactive', ], ['prompt' => 'Select Status']) ?>
+    </div>
 
-    <?= $form->field($model, 'branch_created')->textInput() ?>
-
-    <?= $form->field($model, 'branch_status')->dropDownList([ 'active' => 'Active', 'deactive' => 'Deactive', ], ['prompt' => 'Select Status']) ?>
-
-    <div class="form-group">
+    <div class="form-group col-sm-12">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <a href="<?= Url::toRoute('/branch')?>" class="btn btn-danger">Cancel</a>
     </div>
 
     <?php ActiveForm::end(); ?>
